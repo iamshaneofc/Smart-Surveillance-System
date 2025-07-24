@@ -52,6 +52,14 @@ This module detects dangerous weapons like guns or knives using YOLO-based objec
 - Helps security teams prepare or respond faster.
 
 ---
+<h3>🚧 Suspicious Activity Detection (Under Construction)</h3>
+
+<p>
+  <strong>⚠️ Status:</strong> <em>This model is currently under development.</em><br>
+  🧪 Accuracy is currently suboptimal and does not meet deployment standards.<br>
+  🔄 Improvements and further training are in progress to enhance performance and reliability.
+</p>
+
 
 ### 🏃 4. Suspicious Activity Detection
 Detects activities like crawling, running, falling, climbing—any behavior that deviates from the normal. Trained on Roboflow dataset with labeled action frames.
