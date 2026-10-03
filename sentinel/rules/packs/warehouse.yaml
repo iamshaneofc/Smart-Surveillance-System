@@ -1,0 +1,62 @@
+name: warehouse-security
+version: "0.1"
+industry: warehouse
+description: >
+  Warehouse security profile - restricted-area entry, loitering,
+  weapon candidate in zone, after-hours movement.
+default_classes: [person]
+rules:
+  - rule_id: restricted-area-entry
+    name: Restricted area entry
+    rule_type: zone_enter
+    event_type: restricted_zone_intrusion
+    severity: high
+    zone_ids: [restricted]
+    params:
+      classes: [person]
+    cooldown_seconds: 60
+    confirm_seconds: 2
+    min_confidence: 0.5
+
+  - rule_id: loitering
+    name: Loitering in loading area
+    rule_type: zone_dwell
+    event_type: loitering
+    severity: medium
+    zone_ids: [loading]
+    params:
+      classes: [person]
+      dwell_seconds: 60
+    cooldown_seconds: 300
+    confirm_seconds: 5
+    min_confidence: 0.5
+
+  - rule_id: weapon-in-zone
+    name: Weapon candidate in monitored zone
+    rule_type: zone_enter
+    event_type: weapon_candidate
+    severity: critical
+    zone_ids: [restricted, loading]
+    params:
+      classes: [weapon]
+    cooldown_seconds: 30
+    confirm_seconds: 3
+    min_confidence: 0.6
+
+  - rule_id: after-hours-entry
+    name: After-hours restricted entry
+    rule_type: zone_enter
+    event_type: after_hours_movement
+    severity: high
+    zone_ids: [restricted]
+    params:
+      classes: [person]
+    schedule:
+      timezone: UTC
+      windows:
+        - days: [0, 1, 2, 3, 4, 5, 6]
+          start: "22:00"
+          end: "06:00"
+    cooldown_seconds: 120
+    confirm_seconds: 5
+    min_confidence: 0.5

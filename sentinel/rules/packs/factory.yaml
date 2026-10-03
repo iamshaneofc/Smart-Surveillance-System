@@ -1,0 +1,50 @@
+name: factory-safety
+version: "0.1"
+industry: factory
+description: >
+  Industrial/factory safety profile - restricted and hazardous zones,
+  after-hours movement, vehicle proximity (reserved).
+default_classes: [person]
+rules:
+  - rule_id: restricted-zone-entry
+    name: Restricted zone intrusion
+    rule_type: restricted_zone_intrusion
+    event_type: restricted_zone_intrusion
+    severity: high
+    zone_ids: [restricted]
+    params:
+      classes: [person]
+    cooldown_seconds: 30
+    confirm_seconds: 2
+    min_confidence: 0.5
+
+  - rule_id: hazardous-area-dwell
+    name: Hazardous area dwell
+    rule_type: zone_dwell
+    event_type: hazardous_zone_intrusion
+    severity: critical
+    zone_ids: [hazardous]
+    params:
+      classes: [person]
+      dwell_seconds: 10
+    cooldown_seconds: 300
+    confirm_seconds: 3
+    min_confidence: 0.5
+
+  - rule_id: after-hours-movement
+    name: After-hours movement in restricted area
+    rule_type: zone_enter
+    event_type: after_hours_movement
+    severity: high
+    zone_ids: [restricted]
+    params:
+      classes: [person]
+    schedule:
+      timezone: UTC
+      windows:
+        - days: [0, 1, 2, 3, 4, 5, 6]
+          start: "20:00"
+          end: "06:00"
+    cooldown_seconds: 120
+    confirm_seconds: 5
+    min_confidence: 0.5

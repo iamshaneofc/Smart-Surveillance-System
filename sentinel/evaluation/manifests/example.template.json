@@ -1,0 +1,36 @@
+{
+  "name": "example-manifest",
+  "dataset_id": "REPLACE: stable dataset identifier, e.g. sentinell-eval-entrance-v1",
+  "version": "0",
+  "license": "REPLACE: dataset license (e.g. CC-BY-4.0) - see docs/DATA_LICENSES.md",
+  "source": "REPLACE: provenance of media + annotations (provider, URL, export date, consent basis)",
+  "class_mapping": {
+    "REPLACE_dataset_class": "model_class"
+  },
+  "notes": "Template only. Copy to manifests/, point media/annotation paths at labeled data stored OUTSIDE the repository, fill every REPLACE field, then validate: python evaluation/validate_manifest.py manifests/<name>.json - and run: python evaluation/runners/run_evaluation.py --manifest manifests/<name>.json",
+  "created_at": null,
+  "entries": [
+    {
+      "entry_id": "example-001",
+      "media": "../data/eval/images/example-001.jpg",
+      "media_type": "image",
+      "annotation": "../annotations/example-001.json",
+      "camera_id": "cam-eval",
+      "scene": "entrance",
+      "split": "val",
+      "source_resolution": "1920x1080",
+      "capture_context": "REPLACE: e.g. indoor, consented/licensed source, daytime"
+    },
+    {
+      "entry_id": "example-002",
+      "media": "../data/eval/videos/example-002.mp4",
+      "media_type": "video",
+      "annotation": "../annotations/example-002.json",
+      "camera_id": "cam-eval",
+      "scene": "warehouse",
+      "split": "test",
+      "source_resolution": "1280x720",
+      "capture_context": "REPLACE: e.g. outdoor, licensed corpus, night"
+    }
+  ]
+}

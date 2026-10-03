@@ -1,0 +1,24 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.env
+*.db
+*.sqlite*
+var/
+.pytest_cache/
+dist/
+build/
+node_modules/
+*.tsbuildinfo
+
+# Model weights are NEVER committed (F4-G) - fetched only by
+# scripts/download_models.py with pinned checksums. models/README.md stays tracked.
+models/*.onnx
+models/*.pth
+models/*.pt
+models/*.h5
+models/*.engine
+models/YOLOX/
+models/**/*.onnx
+models/**/*.pth

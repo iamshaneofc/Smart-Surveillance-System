@@ -1,0 +1,5 @@
+# Never commit evaluation media, real manifests or generated reports.
+reports/*.json
+data/
+manifests/*
+!manifests/example.template.json

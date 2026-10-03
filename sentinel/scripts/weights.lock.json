@@ -1,0 +1,17 @@
+{
+  "comment": "Pinned model-weight artifacts for SENTINEL (F4-G). Weights are never committed; scripts/download_models.py fetches and verifies them. sha256 values are pinned from the official sources listed here.",
+  "artifacts": [
+    {
+      "id": "yolox-tiny",
+      "filename": "yolox_tiny.onnx",
+      "model_id": "yolox-tiny",
+      "version": "0.1.1rc0",
+      "url": "https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_tiny.onnx",
+      "size_bytes": 20219662,
+      "sha256": "427cc366d34e27ff7a03e2899b5e3671425c262ea2291f88bb942bc1cc70b0f7",
+      "format": "onnx",
+      "license": "Apache-2.0 (repository LICENSE; no separate weight license published - see docs/DATA_LICENSES.md W1)",
+      "source": "Official Megvii-BaseDetection/YOLOX GitHub release tag 0.1.1rc0 (released 2021-08-18)"
+    }
+  ]
+}

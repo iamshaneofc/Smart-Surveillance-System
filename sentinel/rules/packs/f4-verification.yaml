@@ -1,0 +1,22 @@
+name: f4-verification
+version: "0.1"
+industry: factory
+description: >
+  F4 real-detector end-to-end verification pack (development only).
+  Same restricted-zone rule as the factory pack but with a shortened
+  confirmation window (0.6s) so short conditions on internal development
+  footage can confirm and exercise the full rule -> event -> evidence ->
+  alert chain. Never a default; stock packs keep their confirmation windows.
+default_classes: [person]
+rules:
+  - rule_id: restricted-zone-entry
+    name: Restricted zone intrusion
+    rule_type: restricted_zone_intrusion
+    event_type: restricted_zone_intrusion
+    severity: high
+    zone_ids: [restricted]
+    params:
+      classes: [person]
+    cooldown_seconds: 30
+    confirm_seconds: 0.6
+    min_confidence: 0.5

@@ -1,0 +1,70 @@
+# SENTINEL — Legacy Repository Asset Disposition
+
+**Scope:** everything at the root of `Z:\Security_Surveillance_System` outside `sentinel/`. The legacy project is **deliberately preserved in place** — nothing was moved, deleted or modified in this phase. `sentinel/` is the new build; the root folders are the research archive boundary.
+
+Legend: **RESEARCH** = keep for reference, never imported by SENTINEL · **ARCHIVE** = inert artifact, delete candidate after review · **MIGRATE-LATER** = valuable asset to move under `evaluation/`/`models`/retraining pipeline later · **NEVER-USE** = broken/misleading, excluded from any future code path · **BLOCKED** = license/provenance blocks commercial use.
+
+## 1. Code
+
+| Path | Class | Notes |
+|---|---|---|
+| `Mask-Face-Detector/train_mask_detector.py` | RESEARCH | Training reference only. Contains the train/inference preprocessing split (`preprocess_input` vs `/255`) — do not copy |
+| `Mask-Face-Detector/detect_mask_video.py` | NEVER-USE | Webcam demo; preprocessing mismatch + inverted colors; not importable into new code |
+| `Violence_system/Main.ipynb` | RESEARCH | Only real metrics in legacy repo; frame-level split leakage → **0.9122 must never be reported as a SENTINEL metric** |
+| `Violence_system/live_webcam.py` | NEVER-USE | Broken label check (`label == "Violence"` never matches) → permanently green status; anti-pattern for health UI |
+| `Violence_system/video_test.py` | NEVER-USE | Mojibake output + stale absolute paths |
+| `Violence_system/fight_updated/fight_detect.py` | NEVER-USE | Points at deleted `fight/` path → crashes on start |
+| `Violence_system/fight/testing_code.ipynb` | ARCHIVE | Stock Ultralytics Colab tutorial output, not project code |
+| `weapon_detector/snapshots/test_weapon_detection.py` | NEVER-USE | Loads nonexistent `weapon_detector\best.pt`; camera index 1 vs 0 elsewhere; lives inside an output folder |
+| `suspicious_motion/suspicious_train.py` | RESEARCH | Training reference; stale data dir + non-raw Windows path |
+| `suspicious_motion/sus_check.py` | RESEARCH | Inference reference |
+| `README.md` (root) | RESEARCH | Legacy description + dataset hints |
+| `.gitignore` (root) | untouched | Ignores `my/`, `venv/`, `__pycache__` only; does not cover datasets/weights — see `sentinel/.gitignore` for the new standard |
+
+**No legacy code is imported by `sentinel/`.** All integration would be a deliberate re-implementation against new interfaces.
+
+## 2. Models
+
+Full details in `MODEL_REGISTRY.md`. Summary:
+
+| Path | Class | Blocking reason |
+|---|---|---|
+| `Mask-Face-Detector/mask_detector.h5` | RESEARCH / blocked for production | unknown Kaggle data, never evaluated, preprocessing mismatch |
+| `Mask-Face-Detector/mask_detector.model` | ARCHIVE (never-use) | orphan legacy Keras 2.2.4 copy |
+| `Mask-Face-Detector/Face_detection/*.caffemodel/prototxt` | MIGRATE-LATER (provisional) | face detection only; license review; replace with modern detector |
+| `Violence_system/modelnew.h5`, `ModelWeights.weights.h5` | RESEARCH / blocked | leaked metric + undocumented training videos |
+| `weapon_detector/snapshots/best.pt` | RESEARCH / blocked | Ultralytics AGPL + absent training data + documented false positives |
+| `weapon_detector/snapshots/best3.pt` | ARCHIVE (never-use) | orphan, AGPL header, unreferenced |
+| `Violence_system/fight_updated/Yolo_nano_weights.pt` | RESEARCH / blocked | AGPL header, absent data, broken consumer |
+| `suspicious_motion/human_action_model.pth` | MIGRATE-LATER (candidate) | only model whose training data exists in-repo under a permissive license (CC BY 4.0, attribution required) |
+
+Working-tree note: git already shows pre-existing moves (`weapon_detector/best.pt` → `snapshots/`, `Violence_system/fight/` → `fight_updated/`) as unstaged deletions/untracked files. Left untouched — do not `git checkout` or restage them during the rebuild.
+
+## 3. Datasets
+
+| Path | Class | Note |
+|---|---|---|
+| `Mask-Face-Detector/dataset/` | RESEARCH / BLOCKED | no license file |
+| `Violence_system/Violence_Dataset/` | RESEARCH / BLOCKED | undocumented source |
+| `suspicious_motion/sus/` | MIGRATE-LATER | Roboflow CC BY 4.0 (documented for `crawling/`) + attribution needed |
+| weapon / YOLO-violence training data | absent | Colab-only, unreproducible — listed in `DATA_LICENSES.md` |
+
+## 4. Evidence / artifacts
+
+| Path | Class | Note |
+|---|---|---|
+| `snapshots/high_20250804_232931.jpg` (grenade-on-head FP) | **MIGRATE-LATER → `evaluation/golden_set/`** | known-FP regression case |
+| `weapon_detector/snapshots/high_*.jpg`, `low_*.jpg` | **MIGRATE-LATER → `evaluation/golden_set/`** (internal only) | screenshot-detection FPs, full-frame degenerate box; some derive from third-party content → no redistribution |
+| `snapshots/3.mp4`, `VID-*.mp4`, `snaps.mp4` | ARCHIVE | demo videos; `snaps.mp4` hash-duplicates `VID-20250724-WA0003.mp4` |
+| blank `Violence_system/accuracy.png`, `loss.png` | ARCHIVE | generated by savefig-after-show bug — meaningless |
+| `my/` (venv, ~3.6 GB) | ARCHIVE / local-only | never committed, never reused by SENTINEL (new venv: `sentinel/.venv`) |
+| TensorBoard event logs inside git history | ARCHIVE | 10.2 MB tracked blob; history cleanup considered in later hygiene phase — **not done now** |
+
+## 5. What must never flow into SENTINEL
+
+1. Legacy absolute paths (`Z:\security_camera`, `Z:\Projects\...`) and username-bearing paths.
+2. The permanently-green camera status logic (defeats §25 degradation contract).
+3. The 91.22% violence figure as a production metric.
+4. Frames-as-a-split evaluation methodology.
+5. AGPL weights or blocked datasets in any shipped artifact without explicit license sign-off.
+6. Hardcoded camera indices/thresholds — all configuration belongs in the config layer.
